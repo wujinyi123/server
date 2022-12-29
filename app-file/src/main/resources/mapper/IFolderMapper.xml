@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.system.file.mapper.IFolderMapper">
+    <resultMap id="baseMap" type="com.system.file.model.FolderModel">
+        <id column="id" property="id"/>
+        <result column="folder_name" property="folderName"/>
+        <result column="remark" property="remark"/>
+        <result column="expired_day" property="expiredDay"/>
+        <result column="username" property="username"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    <sql id="baseColumns">
+        id,folder_name,remark,expired_day,username,create_time,update_time
+    </sql>
+
+    <select id="listFolder" resultMap="baseMap">
+        select
+        <include refid="baseColumns"/>
+        from t_file_folder
+        <where>
+            <if test="folderName!=null and folderName!=''">
+                and folder_name like concat('%',#{folderName},'%')
+            </if>
+        </where>
+        order by folder_name
+    </select>
+
+    <select id="selectByFolderName" resultMap="baseMap">
+        select
+        <include refid="baseColumns"/>
+        from t_file_folder
+        where folder_name=#{folderName}
+    </select>
+
+    <insert id="insertFolder">
+        insert into t_file_folder(<include refid="baseColumns"/>)
+        values (#{id}, #{folderName}, #{remark}, #{expiredDay}, #{username}, sysdate(), sysdate())
+    </insert>
+
+    <update id="updateFolder">
+        update t_file_folder set remark=#{remark}, expired_day=#{expiredDay}, username=#{username},
+        update_time=sysdate()
+        where folder_name=#{folderName}
+    </update>
+
+    <delete id="deleteFolder">
+        delete from t_file_folder
+        where folder_name=#{folderName}
+    </delete>
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.system.common.mapper.IUserMapper">
+    <resultMap id="baseMap" type="com.system.common.model.UserModel">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="name" property="name"/>
+        <result column="sex" property="sex"/>
+        <result column="tel" property="tel"/>
+        <result column="email" property="email"/>
+        <result column="role" property="role"/>
+        <result column="img" property="img"/>
+        <result column="class_id" property="classId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_info" property="updateInfo"/>
+        <result column="status" property="status"/>
+    </resultMap>
+    <sql id="baseColumns">
+        id,username,password,name,sex,tel,email,role,img,class_id,
+        create_time,update_time,update_info,status
+    </sql>
+
+    <select id="login" resultMap="baseMap">
+        select
+        <include refid="baseColumns"/>
+        from t_common_user
+        where status='1' and username=#{username} and password=#{password}
+    </select>
+</mapper>

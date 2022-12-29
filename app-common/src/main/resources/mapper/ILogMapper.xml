@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.system.common.mapper.ILogMapper">
+    <resultMap id="baseMap" type="com.system.common.model.LogModel">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="token" property="token"/>
+        <result column="log_type" property="logType"/>
+        <result column="log_info" property="logInfo"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+    <sql id="baseColumns">
+        id,username,token,log_type,log_info,create_time
+    </sql>
+
+    <select id="listLog" resultMap="baseMap">
+        select
+        <include refid="baseColumns"/>
+        from t_common_log
+        <where>
+            <if test="username!=null and username!=''">
+                and username=#{username}
+            </if>
+            <if test="logType!=null and logType!=''">
+                and log_type=#{logType}
+            </if>
+            <if test="queryBegin!=null">
+                and create_time &gt; #{queryBegin}
+            </if>
+            <if test="queryEnd!=null">
+                and create_time &lt; #{queryEnd}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <insert id="insertLog">
+        insert into t_common_log (<include refid="baseColumns"/>)
+        values (#{id},#{username},#{token},#{logType},#{logInfo},sysdate())
+    </insert>
+</mapper>
