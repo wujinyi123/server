@@ -6,6 +6,8 @@ import com.system.common.model.LogModel;
 import com.system.common.service.ILogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,5 +20,10 @@ public class LogController {
     @GetMapping("/common/log")
     public PageInfo<LogModel> pageLog(HttpServletRequest request, LogQO logQO) {
         return logService.pageLog(logQO);
+    }
+
+    @PostMapping("/common/log")
+    public Boolean insertLog(@RequestBody LogModel model) {
+        return logService.insertLog(model);
     }
 }

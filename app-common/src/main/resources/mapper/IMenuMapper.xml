@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.system.common.mapper.IMenuMapper">
+    <resultMap id="baseMap" type="com.system.common.model.MenuModel">
+        <id column="id" property="id"/>
+        <result column="code" property="code"/>
+        <result column="name" property="name"/>
+        <result column="icon" property="icon"/>
+        <result column="route" property="route"/>
+        <result column="parent_code" property="parentCode"/>
+        <result column="type" property="type"/>
+        <result column="sort_no" property="sortNo"/>
+    </resultMap>
+    <sql id="baseColumns">
+        id,code,name,icon,route,parent_code,type,sort_no
+    </sql>
+
+    <select id="listMenu" resultMap="baseMap">
+        select <include refid="baseColumns"/>
+        from t_common_menu
+        order by sort_no
+    </select>
+</mapper>

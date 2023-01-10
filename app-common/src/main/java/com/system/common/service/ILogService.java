@@ -6,4 +6,6 @@ import com.system.common.model.LogModel;
 
 public interface ILogService {
     PageInfo<LogModel> pageLog(LogQO logQO);
+
+    Boolean insertLog(LogModel model);
 }

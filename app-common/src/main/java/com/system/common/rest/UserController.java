@@ -1,6 +1,7 @@
 package com.system.common.rest;
 
 import com.system.base.domain.CurrentUser;
+import com.system.common.pojo.user.UpdatePasswordDTO;
 import com.system.common.pojo.user.UserQO;
 import com.system.common.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @RestController
 public class UserController {
@@ -23,7 +25,17 @@ public class UserController {
     }
 
     @GetMapping("/user/current")
-    public CurrentUser getCurrentUser(HttpServletRequest request) {
-        return userService.getCurrentUser(request);
+    public void getCurrentUser(HttpServletRequest request, HttpServletResponse response) {
+        userService.getCurrentUser(request, response);
+    }
+
+    @GetMapping("/user/logout")
+    public Boolean logout(HttpServletRequest request) {
+        return userService.logout(request);
+    }
+
+    @PostMapping("/user/updatePassword")
+    public Boolean updatePassword(@RequestBody UpdatePasswordDTO dto) {
+        return userService.updatePassword(dto);
     }
 }

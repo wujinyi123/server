@@ -9,4 +9,6 @@ public interface IUserSession {
     CurrentUser setAttibute(HttpServletRequest request, Map<String, Object> user);
 
     CurrentUser getAttibute(HttpServletRequest request);
+
+    Boolean removeAttibute(HttpServletRequest request);
 }

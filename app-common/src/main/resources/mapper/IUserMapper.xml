@@ -23,10 +23,16 @@
         create_time,update_time,update_info,status
     </sql>
 
-    <select id="login" resultMap="baseMap">
+    <select id="getUserByPassword" resultMap="baseMap">
         select
         <include refid="baseColumns"/>
         from t_common_user
         where status='1' and username=#{username} and password=#{password}
     </select>
+
+    <update id="updatePassword">
+        update t_common_user
+        set password=#{password}, update_info=#{updateInfo}, update_time=sysdate()
+        where status='1' and username=#{username}
+    </update>
 </mapper>
