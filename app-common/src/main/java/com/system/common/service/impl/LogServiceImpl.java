@@ -2,6 +2,7 @@ package com.system.common.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.system.base.exception.BusinessRuntimeException;
 import com.system.base.util.DaoUtil;
 import com.system.base.util.SnowflakeIdUtil;
 import com.system.common.pojo.log.LogQO;
@@ -11,6 +12,8 @@ import com.system.common.service.ILogService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -29,8 +32,13 @@ public class LogServiceImpl implements ILogService {
     public Boolean insertLog(LogModel model) {
         model.setId(SnowflakeIdUtil.getSnowflakeId());
         if (DaoUtil.isInsertFail(logMapper.insertLog(model))) {
-            throw new RuntimeException("添加日志失败");
+            throw new BusinessRuntimeException("添加日志失败");
         }
         return true;
+    }
+
+    @Override
+    public Map<String, Object> logStat(String username) {
+        return null;
     }
 }

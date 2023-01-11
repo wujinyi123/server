@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.system.base.component.IRedisService;
 import com.system.base.component.IUserSession;
 import com.system.base.domain.CurrentUser;
+import com.system.base.exception.NoLoginRuntimeException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +54,7 @@ public class UserSessionImpl implements IUserSession {
     private String getToken(HttpServletRequest request) {
         String token = request.getHeader(TOKEN);
         if (StringUtils.isEmpty(token)) {
-            throw new RuntimeException("请求头token不能空");
+            throw new NoLoginRuntimeException("请求头token不能空");
         }
         return token;
     }

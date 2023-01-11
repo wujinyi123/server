@@ -2,6 +2,7 @@ package com.system.file.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.system.base.exception.BusinessRuntimeException;
 import com.system.base.util.DaoUtil;
 import com.system.base.util.SnowflakeIdUtil;
 import com.system.base.util.SystemChooseUtil;
@@ -62,17 +63,17 @@ public class FtpServiceImpl implements IFtpService {
     @Transactional(rollbackFor = Exception.class)
     public Boolean insertFolder(FolderModel folderModel) {
         if (StringUtils.isEmpty(folderModel.getFolderName())) {
-            throw new RuntimeException("文件夹名称不能为空");
+            throw new BusinessRuntimeException("文件夹名称不能为空");
         }
         if (!ValidatorUtil.isLetterNum(folderModel.getFolderName())) {
-            throw new RuntimeException("文件夹名称仅由字母、数字组成");
+            throw new BusinessRuntimeException("文件夹名称仅由字母、数字组成");
         }
         if (Objects.nonNull(folderMapper.selectByFolderName(folderModel.getFolderName()))) {
-            throw new RuntimeException("文件夹已存在");
+            throw new BusinessRuntimeException("文件夹已存在");
         }
         folderModel.setId(SnowflakeIdUtil.getSnowflakeId());
         if (DaoUtil.isInsertFail(folderMapper.insertFolder(folderModel))) {
-            throw new RuntimeException("添加异常");
+            throw new BusinessRuntimeException("添加异常");
         }
         return true;
     }
@@ -81,10 +82,10 @@ public class FtpServiceImpl implements IFtpService {
     @Transactional(rollbackFor = Exception.class)
     public Boolean updateFolder(FolderModel folderModel) {
         if (StringUtils.isEmpty(folderModel.getFolderName())) {
-            throw new RuntimeException("文件夹名称不能为空");
+            throw new BusinessRuntimeException("文件夹名称不能为空");
         }
         if (DaoUtil.isInsertFail(folderMapper.updateFolder(folderModel))) {
-            throw new RuntimeException("修改异常");
+            throw new BusinessRuntimeException("修改异常");
         }
         return true;
     }
@@ -93,7 +94,7 @@ public class FtpServiceImpl implements IFtpService {
     @Transactional(rollbackFor = Exception.class)
     public Boolean deleteFolder(String folderName) {
         if (DaoUtil.isInsertFail(folderMapper.deleteFolder(folderName))) {
-            throw new RuntimeException("删除异常");
+            throw new BusinessRuntimeException("删除异常");
         }
         return true;
     }
@@ -109,10 +110,10 @@ public class FtpServiceImpl implements IFtpService {
     @Transactional(rollbackFor = Exception.class)
     public FileModel upload(MultipartFile file, String folderName, String username) {
         if (file.getSize() > MAXSIZE) {
-            throw new RuntimeException("文件过大");
+            throw new BusinessRuntimeException("文件过大");
         }
         if (Objects.isNull(folderMapper.selectByFolderName(folderName))) {
-            throw new RuntimeException("文件夹不存在");
+            throw new BusinessRuntimeException("文件夹不存在");
         }
         String root = SystemChooseUtil.choose(rootForWin, rootForLinux);
         String realName = file.getOriginalFilename();
@@ -142,11 +143,11 @@ public class FtpServiceImpl implements IFtpService {
                 uploadFile.delete();
             }
             log.error("文件上传失败：" , e);
-            throw new RuntimeException("文件上传失败");
+            throw new BusinessRuntimeException("文件上传失败");
         }
         model.setId(SnowflakeIdUtil.getSnowflakeId());
         if (DaoUtil.isInsertFail(fileMapper.insertFile(model))) {
-            throw new RuntimeException("更新数据库失败");
+            throw new BusinessRuntimeException("更新数据库失败");
         }
         return model;
     }
@@ -155,12 +156,12 @@ public class FtpServiceImpl implements IFtpService {
     public void download(HttpServletResponse response, Long id) {
         FileModel model = fileMapper.selectById(id);
         if (Objects.isNull(model)) {
-            throw new RuntimeException("文件id错误");
+            throw new BusinessRuntimeException("文件id错误");
         }
         String root = SystemChooseUtil.choose(rootForWin, rootForLinux);
         File file = new File(root+"/"+model.getFolderName()+"/" + model.getFileName());
         if (!file.exists()) {
-            throw new RuntimeException("文件不存在");
+            throw new BusinessRuntimeException("文件不存在");
         }
         // 清空response
         response.reset();
@@ -169,7 +170,7 @@ public class FtpServiceImpl implements IFtpService {
             response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(model.getRealName(), "UTF-8"));
         } catch (Exception e) {
             log.error("文件下载失败：" , e);
-            throw new RuntimeException("文件下载失败");
+            throw new BusinessRuntimeException("文件下载失败");
         }
         response.setContentType("application/octet-stream");
         response.setCharacterEncoding("utf-8");
@@ -180,7 +181,7 @@ public class FtpServiceImpl implements IFtpService {
             fis.read(buffer);
         } catch (Exception e) {
             log.error("文件下载失败：" , e);
-            throw new RuntimeException("文件下载失败");
+            throw new BusinessRuntimeException("文件下载失败");
         }
         //byte[] -> OutputStream
         try (OutputStream toClient = new BufferedOutputStream(response.getOutputStream())){
@@ -188,7 +189,7 @@ public class FtpServiceImpl implements IFtpService {
             toClient.flush();
         } catch (Exception e) {
             log.error("文件下载失败：" , e);
-            throw new RuntimeException("文件下载失败");
+            throw new BusinessRuntimeException("文件下载失败");
         }
     }
 
@@ -197,7 +198,7 @@ public class FtpServiceImpl implements IFtpService {
     public Boolean deleteFile(Long id) {
         FileModel model = fileMapper.selectById(id);
         if (Objects.isNull(model)) {
-            throw new RuntimeException("文件id错误");
+            throw new BusinessRuntimeException("文件id错误");
         }
         String root = SystemChooseUtil.choose(rootForWin, rootForLinux);
         File file = new File(root+"/"+model.getFolderName()+"/" + model.getFileName());
@@ -205,7 +206,7 @@ public class FtpServiceImpl implements IFtpService {
             file.delete();
         }
         if (DaoUtil.isDeleteFail(fileMapper.deleteFile(id))) {
-            throw new RuntimeException("更新数据库失败");
+            throw new BusinessRuntimeException("更新数据库失败");
         }
         return true;
     }
