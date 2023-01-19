@@ -60,6 +60,7 @@
         <!--过滤掉spring和mybatis的一些无用的DEBUG信息-->
         <logger name="org.springframework" level="WARN"/>
         <logger name="org.mybatis" level="WARN"/>
+        <logger name="com.zaxxer.hikari.pool" level="WARN"/>
         <root level="debug">
             <appenderref ref="CONSOLE"/>
             <appenderref ref="RollingFileInfo"/>

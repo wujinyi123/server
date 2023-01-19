@@ -3,7 +3,7 @@
 <!--status:当设置成trace时，你会看到log4j2内部各种详细输出    monitorInterval：Log4j能够自动检测修改配置 文件和重新配置本身，设置间隔秒数-->
 <configuration status="DEBUG" monitorInternal="6000">
     <properties>
-        <property name="FILE_NAME">app-file</property>
+        <property name="FILE_NAME">app-xiumei</property>
         <property name="PATTERN">
             %d{yyyy-MM-dd HH:mm:ss.SSS}|${FILE_NAME}|%-4level|[%thread]|[%c.%M]|[%L]|%msg%n
         </property>
@@ -15,8 +15,8 @@
         </console>
 
         <!-- 这个会打印出所有的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档 -->
-        <RollingFile name="RollingFileInfo" immediateFlush="true" fileName="logs/app-file/${FILE_NAME}.info.log"
-                     filePattern="logs/app-file/${date:yyyy-MM}/${FILE_NAME}-%d{yyyy-MM-dd}-%i.log.gz">
+        <RollingFile name="RollingFileInfo" immediateFlush="true" fileName="logs/app-xiumei/${FILE_NAME}.info.log"
+                     filePattern="logs/app-xiumei/${date:yyyy-MM}/${FILE_NAME}-%d{yyyy-MM-dd}-%i.log.gz">
             <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
             <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="${PATTERN}"/>
@@ -27,8 +27,8 @@
             </Policies>
         </RollingFile>
 
-        <RollingFile name="RollingFileWarn" immediateFlush="true" fileName="logs/app-file/${FILE_NAME}.warn.log"
-                     filePattern="logs/app-file/${date:yyyy-MM}/${FILE_NAME}-%d{yyyy-MM-dd}-%i.log.gz">
+        <RollingFile name="RollingFileWarn" immediateFlush="true" fileName="logs/app-xiumei/${FILE_NAME}.warn.log"
+                     filePattern="logs/app-xiumei/${date:yyyy-MM}/${FILE_NAME}-%d{yyyy-MM-dd}-%i.log.gz">
             <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="${PATTERN}"/>
             <Policies>
@@ -40,8 +40,8 @@
             <DefaultRolloverStrategy max="20"/>
         </RollingFile>
 
-        <RollingFile name="RollingFileError" immediateFlush="true" fileName="logs/app-file/${FILE_NAME}.error.log"
-                     filePattern="logs/app-file/${date:yyyy-MM}/${FILE_NAME}-%d{yyyy-MM-dd}-%i.log.gz">
+        <RollingFile name="RollingFileError" immediateFlush="true" fileName="logs/app-xiumei/${FILE_NAME}.error.log"
+                     filePattern="logs/app-xiumei/${date:yyyy-MM}/${FILE_NAME}-%d{yyyy-MM-dd}-%i.log.gz">
             <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="${PATTERN}"/>
             <Policies>
