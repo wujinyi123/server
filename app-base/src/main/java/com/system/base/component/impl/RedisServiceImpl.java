@@ -29,7 +29,7 @@ public class RedisServiceImpl implements IRedisService {
 
     @Override
     public void removeKeyValue(String key) {
-        setBySECONDS(key,null,1);
+        setBySECONDS(key, null, 1);
     }
 
     @Override

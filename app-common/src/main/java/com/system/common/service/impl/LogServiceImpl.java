@@ -2,7 +2,7 @@ package com.system.common.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.system.base.exception.BusinessRuntimeException;
+import com.system.base.exception.BusinessException;
 import com.system.base.util.DaoUtil;
 import com.system.base.util.SnowflakeIdUtil;
 import com.system.common.pojo.log.LogQO;
@@ -32,7 +32,7 @@ public class LogServiceImpl implements ILogService {
     public Boolean insertLog(LogModel model) {
         model.setId(SnowflakeIdUtil.getSnowflakeId());
         if (DaoUtil.isInsertFail(logMapper.insertLog(model))) {
-            throw new BusinessRuntimeException("添加日志失败");
+            throw new BusinessException("添加日志失败");
         }
         return true;
     }

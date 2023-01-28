@@ -17,8 +17,36 @@
     </sql>
 
     <select id="listMenu" resultMap="baseMap">
-        select <include refid="baseColumns"/>
+        select
+        <include refid="baseColumns"/>
         from t_common_menu
         order by sort_no
     </select>
+
+    <select id="getByCode" resultMap="baseMap">
+        select
+        <include refid="baseColumns"/>
+        from t_common_menu
+        where code=#{code}
+    </select>
+
+    <insert id="insertMenu">
+        insert t_common_menu(<include refid="baseColumns"/>)
+        values (#{id}, #{code}, #{name}, #{icon}, #{route}, #{parentCode}, #{type}, #{sortNo})
+    </insert>
+
+    <update id="updateMenu">
+        update t_common_menu
+        set name=#{name}, icon=#{icon}, route=#{route},
+        parent_code=#{parentCode}, type=#{type}, sort_no=#{sortNo}
+        where code=#{code}
+    </update>
+
+    <delete id="deleteMenu">
+        delete from t_common_menu
+        where code in
+        <foreach collection="codeList" item="code" index="index" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </delete>
 </mapper>

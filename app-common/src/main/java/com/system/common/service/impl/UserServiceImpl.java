@@ -3,10 +3,9 @@ package com.system.common.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.system.base.component.IUserSession;
 import com.system.base.domain.CurrentUser;
-import com.system.base.exception.BusinessRuntimeException;
+import com.system.base.exception.BusinessException;
 import com.system.base.util.DaoUtil;
 import com.system.base.util.SnowflakeIdUtil;
-import com.system.common.enums.UpdateUserEnum;
 import com.system.common.pojo.user.UpdatePasswordDTO;
 import com.system.common.pojo.user.UserQO;
 import com.system.common.mapper.ILogMapper;
@@ -21,8 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
 
@@ -42,11 +39,11 @@ public class UserServiceImpl implements IUserService {
     @Transactional(rollbackFor = Exception.class)
     public CurrentUser login(HttpServletRequest request, UserQO userQO) {
         if (StringUtils.isAnyEmpty(userQO.getUsername(), userQO.getPassword())) {
-            throw new BusinessRuntimeException("账号密码不能为空");
+            throw new BusinessException("账号密码不能为空");
         }
         UserModel model = userMapper.getUserByPassword(userQO.getUsername(), userQO.getPassword());
         if (Objects.isNull(model)) {
-            throw new BusinessRuntimeException("账号或密码错误");
+            throw new BusinessException("账号或密码错误");
         }
         model.setPassword(null);
         String json = JSONObject.toJSONString(model);
@@ -59,26 +56,14 @@ public class UserServiceImpl implements IUserService {
         logModel.setLogType("login");
         logModel.setLogInfo(JSONObject.toJSONString(currentUser.getUser()));
         if (DaoUtil.isInsertFail(logMapper.insertLog(logModel))) {
-            throw new BusinessRuntimeException("记录日志异常");
+            throw new BusinessException("记录日志异常");
         }
         return currentUser;
     }
 
     @Override
-    public void getCurrentUser(HttpServletRequest request, HttpServletResponse response) {
-        CurrentUser currentUser = userSession.getAttibute(request);
-        String data = JSONObject.toJSONString(currentUser);
-        if (Objects.isNull(currentUser) || StringUtils.isEmpty(currentUser.getToken())) {
-            response.setStatus(400);
-            data = "用户未登录或登录已过期";
-        }
-        response.setHeader("content-type", "application/json;charset=UTF-8");//通过设置响应头控制浏览器以UTF-8的编码显示数据
-        try {
-            response.getOutputStream().write(data.getBytes("UTF-8"));
-        } catch (Exception e) {
-            log.error("返回异常：",e);
-            throw new BusinessRuntimeException("返回异常");
-        }
+    public CurrentUser getCurrentUser(HttpServletRequest request) {
+        return userSession.getAttibute(request);
     }
 
     @Override
@@ -94,20 +79,20 @@ public class UserServiceImpl implements IUserService {
         String newPassword = dto.getNewPassword();
         String checkPassword = dto.getCheckPassword();
         if (StringUtils.isAnyEmpty(username, oldPassword, newPassword, checkPassword)) {
-            throw new BusinessRuntimeException("所有参数均不能为空");
+            throw new BusinessException("所有参数均不能为空");
         }
         if (!newPassword.equals(checkPassword)) {
-            throw new BusinessRuntimeException("新密码与确认密码不一致");
+            throw new BusinessException("新密码与确认密码不一致");
         }
         if (newPassword.equals(oldPassword)) {
-            throw new BusinessRuntimeException("新旧密码不能一样");
+            throw new BusinessException("新旧密码不能一样");
         }
         if (Objects.isNull(userMapper.getUserByPassword(username, oldPassword))) {
-            throw new BusinessRuntimeException("旧密码不正确");
+            throw new BusinessException("旧密码不正确");
         }
         String updateInfo = String.format(UPDATE_FORMAT, username, "修改密码");
         if (DaoUtil.isUpdateFail(userMapper.updatePassword(username, newPassword, updateInfo))) {
-            throw new BusinessRuntimeException("修改密码异常");
+            throw new BusinessException("修改密码异常");
         }
         return true;
     }

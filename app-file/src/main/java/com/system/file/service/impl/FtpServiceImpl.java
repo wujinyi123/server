@@ -2,7 +2,7 @@ package com.system.file.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.system.base.exception.BusinessRuntimeException;
+import com.system.base.exception.BusinessException;
 import com.system.base.util.DaoUtil;
 import com.system.base.util.SnowflakeIdUtil;
 import com.system.base.util.SystemChooseUtil;
@@ -29,7 +29,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -63,17 +62,17 @@ public class FtpServiceImpl implements IFtpService {
     @Transactional(rollbackFor = Exception.class)
     public Boolean insertFolder(FolderModel folderModel) {
         if (StringUtils.isEmpty(folderModel.getFolderName())) {
-            throw new BusinessRuntimeException("文件夹名称不能为空");
+            throw new BusinessException("文件夹名称不能为空");
         }
         if (!ValidatorUtil.isLetterNum(folderModel.getFolderName())) {
-            throw new BusinessRuntimeException("文件夹名称仅由字母、数字组成");
+            throw new BusinessException("文件夹名称仅由字母、数字组成");
         }
         if (Objects.nonNull(folderMapper.selectByFolderName(folderModel.getFolderName()))) {
-            throw new BusinessRuntimeException("文件夹已存在");
+            throw new BusinessException("文件夹已存在");
         }
         folderModel.setId(SnowflakeIdUtil.getSnowflakeId());
         if (DaoUtil.isInsertFail(folderMapper.insertFolder(folderModel))) {
-            throw new BusinessRuntimeException("添加异常");
+            throw new BusinessException("添加异常");
         }
         return true;
     }
@@ -82,10 +81,10 @@ public class FtpServiceImpl implements IFtpService {
     @Transactional(rollbackFor = Exception.class)
     public Boolean updateFolder(FolderModel folderModel) {
         if (StringUtils.isEmpty(folderModel.getFolderName())) {
-            throw new BusinessRuntimeException("文件夹名称不能为空");
+            throw new BusinessException("文件夹名称不能为空");
         }
         if (DaoUtil.isInsertFail(folderMapper.updateFolder(folderModel))) {
-            throw new BusinessRuntimeException("修改异常");
+            throw new BusinessException("修改异常");
         }
         return true;
     }
@@ -94,7 +93,7 @@ public class FtpServiceImpl implements IFtpService {
     @Transactional(rollbackFor = Exception.class)
     public Boolean deleteFolder(String folderName) {
         if (DaoUtil.isInsertFail(folderMapper.deleteFolder(folderName))) {
-            throw new BusinessRuntimeException("删除异常");
+            throw new BusinessException("删除异常");
         }
         return true;
     }
@@ -102,7 +101,7 @@ public class FtpServiceImpl implements IFtpService {
     @Override
     public PageInfo<FileModel> pageFile(FileQO fileQO) {
         PageHelper.startPage(fileQO);
-        PageInfo<FileModel> pageInfo = new PageInfo<>(fileMapper.listFile(fileQO.getFolderName(),fileQO.getFileName(),fileQO.getRealName()));
+        PageInfo<FileModel> pageInfo = new PageInfo<>(fileMapper.listFile(fileQO.getFolderName(), fileQO.getFileName(), fileQO.getRealName()));
         return pageInfo;
     }
 
@@ -110,10 +109,10 @@ public class FtpServiceImpl implements IFtpService {
     @Transactional(rollbackFor = Exception.class)
     public FileModel upload(MultipartFile file, String folderName, String username) {
         if (file.getSize() > MAXSIZE) {
-            throw new BusinessRuntimeException("文件过大");
+            throw new BusinessException("文件过大");
         }
         if (Objects.isNull(folderMapper.selectByFolderName(folderName))) {
-            throw new BusinessRuntimeException("文件夹不存在");
+            throw new BusinessException("文件夹不存在");
         }
         String root = SystemChooseUtil.choose(rootForWin, rootForLinux);
         String realName = file.getOriginalFilename();
@@ -126,12 +125,12 @@ public class FtpServiceImpl implements IFtpService {
         model.setFileSize(file.getSize());
         model.setUsername(username);
         //所在文件夹
-        File folderFile = new File(root+"/"+folderName);
+        File folderFile = new File(root + "/" + folderName);
         if (!folderFile.exists()) {
             folderFile.mkdirs();
         }
         //上传的文件
-        File uploadFile = new File(root+"/"+folderName+"/" + model.getFileName());
+        File uploadFile = new File(root + "/" + folderName + "/" + model.getFileName());
         if (uploadFile.exists()) {
             uploadFile.delete();
         }
@@ -142,12 +141,12 @@ public class FtpServiceImpl implements IFtpService {
             if (uploadFile.exists()) {
                 uploadFile.delete();
             }
-            log.error("文件上传失败：" , e);
-            throw new BusinessRuntimeException("文件上传失败");
+            log.error("文件上传失败：", e);
+            throw new BusinessException("文件上传失败");
         }
         model.setId(SnowflakeIdUtil.getSnowflakeId());
         if (DaoUtil.isInsertFail(fileMapper.insertFile(model))) {
-            throw new BusinessRuntimeException("更新数据库失败");
+            throw new BusinessException("更新数据库失败");
         }
         return model;
     }
@@ -156,12 +155,12 @@ public class FtpServiceImpl implements IFtpService {
     public void download(HttpServletResponse response, Long id) {
         FileModel model = fileMapper.selectById(id);
         if (Objects.isNull(model)) {
-            throw new BusinessRuntimeException("文件id错误");
+            throw new BusinessException("文件id错误");
         }
         String root = SystemChooseUtil.choose(rootForWin, rootForLinux);
-        File file = new File(root+"/"+model.getFolderName()+"/" + model.getFileName());
+        File file = new File(root + "/" + model.getFolderName() + "/" + model.getFileName());
         if (!file.exists()) {
-            throw new BusinessRuntimeException("文件不存在");
+            throw new BusinessException("文件不存在");
         }
         // 清空response
         response.reset();
@@ -169,27 +168,27 @@ public class FtpServiceImpl implements IFtpService {
         try {
             response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(model.getRealName(), "UTF-8"));
         } catch (Exception e) {
-            log.error("文件下载失败：" , e);
-            throw new BusinessRuntimeException("文件下载失败");
+            log.error("文件下载失败：", e);
+            throw new BusinessException("文件下载失败");
         }
         response.setContentType("application/octet-stream");
         response.setCharacterEncoding("utf-8");
         byte[] buffer;
         //InputStream -> byte[]
-        try (InputStream fis = new BufferedInputStream(new FileInputStream(file))){
+        try (InputStream fis = new BufferedInputStream(new FileInputStream(file))) {
             buffer = new byte[fis.available()];
             fis.read(buffer);
         } catch (Exception e) {
-            log.error("文件下载失败：" , e);
-            throw new BusinessRuntimeException("文件下载失败");
+            log.error("文件下载失败：", e);
+            throw new BusinessException("文件下载失败");
         }
         //byte[] -> OutputStream
-        try (OutputStream toClient = new BufferedOutputStream(response.getOutputStream())){
+        try (OutputStream toClient = new BufferedOutputStream(response.getOutputStream())) {
             toClient.write(buffer);
             toClient.flush();
         } catch (Exception e) {
-            log.error("文件下载失败：" , e);
-            throw new BusinessRuntimeException("文件下载失败");
+            log.error("文件下载失败：", e);
+            throw new BusinessException("文件下载失败");
         }
     }
 
@@ -198,15 +197,15 @@ public class FtpServiceImpl implements IFtpService {
     public Boolean deleteFile(Long id) {
         FileModel model = fileMapper.selectById(id);
         if (Objects.isNull(model)) {
-            throw new BusinessRuntimeException("文件id错误");
+            throw new BusinessException("文件id错误");
         }
         String root = SystemChooseUtil.choose(rootForWin, rootForLinux);
-        File file = new File(root+"/"+model.getFolderName()+"/" + model.getFileName());
+        File file = new File(root + "/" + model.getFolderName() + "/" + model.getFileName());
         if (file.exists()) {
             file.delete();
         }
         if (DaoUtil.isDeleteFail(fileMapper.deleteFile(id))) {
-            throw new BusinessRuntimeException("更新数据库失败");
+            throw new BusinessException("更新数据库失败");
         }
         return true;
     }

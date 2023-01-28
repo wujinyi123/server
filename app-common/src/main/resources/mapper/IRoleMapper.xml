@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.system.common.mapper.IRoleMapper">
+    <resultMap id="baseMap" type="com.system.common.model.RoleModel">
+        <id column="id" property="id"/>
+        <result column="code" property="code"/>
+        <result column="name" property="name"/>
+    </resultMap>
+    <sql id="baseColumns">
+        id,code,name
+    </sql>
+
+    <select id="listRole" resultMap="baseMap">
+        select
+        <include refid="baseColumns"/>
+        from t_common_role
+    </select>
+
+    <select id="getByCode" resultMap="baseMap">
+        select
+        <include refid="baseColumns"/>
+        from t_common_role
+        where code=#{code}
+    </select>
+
+    <insert id="insertRole">
+        insert t_common_role(<include refid="baseColumns"/>)
+        values (#{id}, #{code}, #{name})
+    </insert>
+
+    <update id="updateRole">
+        update t_common_role set name=#{name} where code=#{code}
+    </update>
+
+    <delete id="deleteRole">
+        delete from t_common_role where code=#{code}
+    </delete>
+</mapper>

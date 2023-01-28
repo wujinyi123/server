@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 @RestController
 public class UserController {
@@ -25,8 +24,8 @@ public class UserController {
     }
 
     @GetMapping("/user/current")
-    public void getCurrentUser(HttpServletRequest request, HttpServletResponse response) {
-        userService.getCurrentUser(request, response);
+    public CurrentUser getCurrentUser(HttpServletRequest request) {
+        return userService.getCurrentUser(request);
     }
 
     @GetMapping("/user/logout")

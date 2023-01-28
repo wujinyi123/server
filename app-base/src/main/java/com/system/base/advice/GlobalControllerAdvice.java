@@ -6,13 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice("com.system")
-public class GlobalExceptionResolver {
-    /**
-     * 处理未登录异常
-     */
+@RestControllerAdvice
+public class GlobalControllerAdvice {
     @ExceptionHandler(NoLoginRuntimeException.class)
-    public ResponseEntity handleNoLoginRuntimeException(NoLoginRuntimeException e) {
+    public ResponseEntity handle(Exception e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).body(e.getMessage());
     }
 }

@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableScheduling
 @EnableTransactionManagement
 @MapperScan(basePackages = "com.system.common.mapper")
-@SpringBootApplication(scanBasePackages = {"com.system.base.component", "com.system.common"})
+@SpringBootApplication(scanBasePackages = {"com.system"})
 public class AppCommonApplication {
 
     public static void main(String[] args) {
