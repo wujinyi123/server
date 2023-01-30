@@ -1,10 +1,14 @@
 package com.system.common.service.impl;
 
+import com.system.base.component.IUserSession;
+import com.system.base.domain.CurrentUser;
 import com.system.base.exception.BusinessException;
 import com.system.base.util.DaoUtil;
 import com.system.base.util.SnowflakeIdUtil;
 import com.system.common.mapper.IMenuMapper;
+import com.system.common.mapper.IRoleMenuMapper;
 import com.system.common.model.MenuModel;
+import com.system.common.model.RoleMenuModel;
 import com.system.common.pojo.menu.MenuTreeDTO;
 import com.system.common.service.IMenuService;
 import lombok.extern.slf4j.Slf4j;
@@ -14,24 +18,51 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Slf4j
 @Service
 public class MenuServiceImpl implements IMenuService {
     @Autowired
     private IMenuMapper menuMapper;
+    @Autowired
+    private IRoleMenuMapper roleMenuMapper;
+    @Autowired
+    private IUserSession userSession;
 
     @Override
-    public Map<String, Object> currentMenu() {
+    public Map<String, Object> currentMenu(HttpServletRequest request) {
+        CurrentUser currentUser = userSession.getAttibute(request);
+        //没有配置角色
+        String roleCodes = (String) currentUser.getUser().get("role");
+        if (StringUtils.isEmpty(roleCodes)) {
+            return new HashMap<>();
+        }
+        //角色没有配置菜单
+        List<RoleMenuModel> listRoleMenu = roleMenuMapper.listByRoleCode(roleCodes);
+        if (CollectionUtils.isEmpty(listRoleMenu)) {
+            return new HashMap<>();
+        }
+        //获取角色所配置的路由菜单
+        List<String> menuCodes = listRoleMenu.stream().map(item -> item.getMenuCode()).distinct().collect(Collectors.toList());
         List<MenuModel> list = menuMapper.listMenu();
-        return getMenuResult(list);
+        Map<String, Object> map = getMenuResult(list);
+        List<MenuTreeDTO> routes = (List<MenuTreeDTO>) map.getOrDefault("routes", new ArrayList<>());
+        routes = routes.stream().filter(item -> menuCodes.indexOf(item.getCode()) > -1).collect(Collectors.toList());
+        //获取所有菜单代码
+        Set<String> codes = new HashSet<>();
+        for (MenuTreeDTO dto : routes) {
+            codes.addAll(dto.getCodes());
+        }
+        return getMenuResult(list.stream().filter(item -> codes.contains(item.getCode())).collect(Collectors.toList()));
     }
 
     @Override
@@ -67,7 +98,7 @@ public class MenuServiceImpl implements IMenuService {
         List<String> codeList = allNodes.stream()
                 .filter(item -> item.getCodes().indexOf(code) > -1)
                 .map(item -> item.getCode()).collect(Collectors.toList());
-        if (codeList.size()==0 || DaoUtil.isDeleteFail(menuMapper.deleteMenu(codeList))) {
+        if (codeList.size() == 0 || DaoUtil.isDeleteFail(menuMapper.deleteMenu(codeList))) {
             throw new BusinessException("删除失败");
         }
         return true;

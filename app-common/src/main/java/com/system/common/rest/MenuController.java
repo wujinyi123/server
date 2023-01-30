@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @RestController
@@ -19,8 +20,8 @@ public class MenuController {
     private IMenuService menuService;
 
     @GetMapping("/menu/current")
-    public Map<String, Object> currentMenu() {
-        return menuService.currentMenu();
+    public Map<String, Object> currentMenu(HttpServletRequest request) {
+        return menuService.currentMenu(request);
     }
 
     @GetMapping("/menu/info")

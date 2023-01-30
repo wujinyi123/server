@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.system.common.mapper.IRoleMenuMapper">
+    <resultMap id="baseMap" type="com.system.common.model.RoleMenuModel">
+        <id column="id" property="id"/>
+        <result column="role_code" property="roleCode"/>
+        <result column="menu_code" property="menuCode"/>
+    </resultMap>
+    <sql id="baseColumns">
+        id,role_code,menu_code
+    </sql>
+
+    <select id="listByRoleCode" resultMap="baseMap">
+        select <include refid="baseColumns"/>
+        from t_common_role_menu
+        where role_code in
+        <foreach collection="roleCode.split(',')" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <delete id="deleteByRoleCode">
+        delete from t_common_role_menu
+        where role_code=#{roleCode}
+    </delete>
+
+    <insert id="insertRoleMenu">
+        insert into t_common_role_menu(<include refid="baseColumns"/>) values
+        <foreach collection="list" item="model" index="index" separator=",">
+            (#{model.id}, #{model.roleCode}, #{model.menuCode})
+        </foreach>
+    </insert>
+</mapper>
