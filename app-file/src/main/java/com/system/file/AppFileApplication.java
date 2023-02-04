@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableScheduling
 @EnableTransactionManagement
 @MapperScan(basePackages = "com.system.file.mapper")
-@SpringBootApplication(scanBasePackages = {"com.system.base.component", "com.system.file"})
+@SpringBootApplication(scanBasePackages = {"com.system"})
 public class AppFileApplication {
 
     public static void main(String[] args) {

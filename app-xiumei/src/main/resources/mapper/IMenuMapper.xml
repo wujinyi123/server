@@ -5,4 +5,12 @@
     <select id="listDemo" resultType="map">
         select first_name,last_name from t_demo
     </select>
+
+    <insert id="addDemo">
+        insert into t_demo(first_name) values (#{code})
+    </insert>
+
+    <update id="updateDemo">
+        update t_demo set last_name=#{result} where first_name=#{code}
+    </update>
 </mapper>

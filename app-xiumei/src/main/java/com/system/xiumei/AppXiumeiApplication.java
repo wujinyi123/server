@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableScheduling
 @EnableTransactionManagement
 @MapperScan(basePackages = "com.system.xiumei.mapper")
-@SpringBootApplication(scanBasePackages = {"com.system.base.component", "com.system.xiumei"})
+@SpringBootApplication(scanBasePackages = {"com.system"})
 public class AppXiumeiApplication {
 
     public static void main(String[] args) {
