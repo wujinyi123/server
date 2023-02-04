@@ -8,11 +8,11 @@ import java.util.concurrent.TimeUnit;
 
 public class ThreadPoolUtil {
     private int corePoolSize = 3;
-    private int maximumPoolSizeSize=10;
-    private long keepAliveTime=1;
+    private int maximumPoolSizeSize = 10;
+    private long keepAliveTime = 1;
     private ArrayBlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<>(128);
 
-    private ThreadPoolExecutor executor = new ThreadPoolExecutor(corePoolSize,maximumPoolSizeSize,
+    private ThreadPoolExecutor executor = new ThreadPoolExecutor(corePoolSize, maximumPoolSizeSize,
             keepAliveTime, TimeUnit.MINUTES, workQueue,
             new ThreadFactoryBuilder().setNameFormat("ThreadPool-%d").build());
 

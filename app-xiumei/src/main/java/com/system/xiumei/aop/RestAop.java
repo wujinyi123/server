@@ -21,12 +21,13 @@ public class RestAop {
     private IDemoMapper demoMapper;
 
     @Pointcut("@annotation(com.system.base.inter.BackgroundTask)")
-    private static void restAop(){}
+    private static void restAop() {
+    }
 
     @Around("restAop()")
     public Object invoke(ProceedingJoinPoint joinPoint) throws Exception {
         TaskResult taskResult = new TaskResult();
-        Runnable task = ()->{
+        Runnable task = () -> {
             try {
                 taskResult.setResult(joinPoint.proceed());
                 taskResult.setIsAlive(false);
@@ -39,13 +40,13 @@ public class RestAop {
             }
         };
         ThreadPoolUtil.getInstance().startTask(task);
-        for (int i=0;i<5;i++) {
+        for (int i = 0; i < 5; i++) {
             Thread.sleep(1000);
             if (!taskResult.getIsAlive()) {
                 return taskResult.getResult();
             }
         }
-        taskResult.setTaskCode(System.currentTimeMillis()+"");
+        taskResult.setTaskCode(System.currentTimeMillis() + "");
         demoMapper.addDemo(taskResult.getTaskCode());
         return taskResult;
     }

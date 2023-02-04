@@ -12,7 +12,8 @@
     </sql>
 
     <select id="listByRoleCode" resultMap="baseMap">
-        select <include refid="baseColumns"/>
+        select
+        <include refid="baseColumns"/>
         from t_common_role_menu
         where role_code in
         <foreach collection="roleCode.split(',')" item="item" index="index" open="(" separator="," close=")">
