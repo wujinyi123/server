@@ -4,7 +4,7 @@ import com.system.base.exception.BusinessException;
 import com.system.base.util.DaoUtil;
 import com.system.base.util.SnowflakeIdUtil;
 import com.system.common.mapper.IRoleMapper;
-import com.system.common.model.RoleModel;
+import com.system.common.domain.model.RoleModel;
 import com.system.common.service.IRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,12 +1,13 @@
 package com.system.file.mapper;
 
-import com.system.file.model.FolderModel;
+import com.system.file.domain.model.FolderModel;
+import com.system.file.domain.qo.folder.FolderQO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 public interface IFolderMapper {
-    List<FolderModel> listFolder(@Param("folderName") String folderName);
+    List<FolderModel> listFolder(FolderQO folderQO);
 
     FolderModel selectByFolderName(@Param("folderName") String folderName);
 

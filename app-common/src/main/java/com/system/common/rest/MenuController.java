@@ -1,6 +1,6 @@
 package com.system.common.rest;
 
-import com.system.common.model.MenuModel;
+import com.system.common.domain.model.MenuModel;
 import com.system.common.service.IMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;

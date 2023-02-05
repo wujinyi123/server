@@ -1,6 +1,6 @@
-package com.system.common.pojo.menu;
+package com.system.common.domain.dto.menu;
 
-import com.system.common.model.MenuModel;
+import com.system.common.domain.model.MenuModel;
 import lombok.Data;
 
 import java.util.List;

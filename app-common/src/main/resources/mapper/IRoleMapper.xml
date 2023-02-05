@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.system.common.mapper.IRoleMapper">
-    <resultMap id="baseMap" type="com.system.common.model.RoleModel">
+    <resultMap id="baseMap" type="com.system.common.domain.model.RoleModel">
         <id column="id" property="id"/>
         <result column="code" property="code"/>
         <result column="name" property="name"/>
@@ -22,6 +22,16 @@
         <include refid="baseColumns"/>
         from t_common_role
         where code=#{code}
+    </select>
+
+    <select id="getByCodes" resultMap="baseMap">
+        select
+        <include refid="baseColumns"/>
+        from t_common_role
+        where code in
+        <foreach collection="codes.split(',')" item="code" index="index" open="(" separator="," close=")">
+            #{code}
+        </foreach>
     </select>
 
     <insert id="insertRole">

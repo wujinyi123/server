@@ -1,15 +1,12 @@
 package com.system.common.mapper;
 
-import com.system.common.model.LogModel;
-import org.apache.ibatis.annotations.Param;
+import com.system.common.domain.model.LogModel;
+import com.system.common.domain.qo.log.LogQO;
 
 import java.util.List;
 
 public interface ILogMapper {
-    List<LogModel> listLog(@Param("username") String username,
-                           @Param("logType") String logType,
-                           @Param("queryBegin") Long queryBegin,
-                           @Param("queryEnd") Long queryEnd);
+    List<LogModel> listLog(LogQO logQO);
 
     int insertLog(LogModel logModel);
 }

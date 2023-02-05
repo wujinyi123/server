@@ -1,4 +1,4 @@
-package com.system.common.enums;
+package com.system.common.domain.enums;
 
 public enum UpdateUserEnum {
     UPDATE_PASSWORD("updatePassword", "修改密码"),

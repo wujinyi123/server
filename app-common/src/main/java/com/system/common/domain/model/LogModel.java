@@ -1,4 +1,4 @@
-package com.system.common.model;
+package com.system.common.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;

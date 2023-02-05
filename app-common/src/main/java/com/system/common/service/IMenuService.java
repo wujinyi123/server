@@ -1,6 +1,6 @@
 package com.system.common.service;
 
-import com.system.common.model.MenuModel;
+import com.system.common.domain.model.MenuModel;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;

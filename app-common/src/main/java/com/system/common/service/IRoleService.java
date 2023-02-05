@@ -1,6 +1,6 @@
 package com.system.common.service;
 
-import com.system.common.model.RoleModel;
+import com.system.common.domain.model.RoleModel;
 
 import java.util.List;
 

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.system.common.mapper.IRoleMenuMapper">
-    <resultMap id="baseMap" type="com.system.common.model.RoleMenuModel">
+    <resultMap id="baseMap" type="com.system.common.domain.model.RoleMenuModel">
         <id column="id" property="id"/>
         <result column="role_code" property="roleCode"/>
         <result column="menu_code" property="menuCode"/>

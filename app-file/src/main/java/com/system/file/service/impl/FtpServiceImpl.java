@@ -9,10 +9,10 @@ import com.system.base.util.SystemChooseUtil;
 import com.system.base.util.ValidatorUtil;
 import com.system.file.mapper.IFileMapper;
 import com.system.file.mapper.IFolderMapper;
-import com.system.file.model.FileModel;
-import com.system.file.model.FolderModel;
-import com.system.file.pojo.ftp.FileQO;
-import com.system.file.pojo.ftp.FolderQO;
+import com.system.file.domain.model.FileModel;
+import com.system.file.domain.model.FolderModel;
+import com.system.file.domain.qo.file.FileQO;
+import com.system.file.domain.qo.folder.FolderQO;
 import com.system.file.service.IFtpService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -54,7 +54,7 @@ public class FtpServiceImpl implements IFtpService {
     @Override
     public PageInfo<FolderModel> pageFolder(FolderQO folderQO) {
         PageHelper.startPage(folderQO);
-        PageInfo<FolderModel> pageInfo = new PageInfo<>(folderMapper.listFolder(folderQO.getFolderName()));
+        PageInfo<FolderModel> pageInfo = new PageInfo<>(folderMapper.listFolder(folderQO));
         return pageInfo;
     }
 
@@ -101,7 +101,7 @@ public class FtpServiceImpl implements IFtpService {
     @Override
     public PageInfo<FileModel> pageFile(FileQO fileQO) {
         PageHelper.startPage(fileQO);
-        PageInfo<FileModel> pageInfo = new PageInfo<>(fileMapper.listFile(fileQO.getFolderName(), fileQO.getFileName(), fileQO.getRealName()));
+        PageInfo<FileModel> pageInfo = new PageInfo<>(fileMapper.listFile(fileQO));
         return pageInfo;
     }
 

@@ -1,4 +1,4 @@
-package com.system.common.pojo.user;
+package com.system.common.domain.dto.user;
 
 import lombok.Data;
 

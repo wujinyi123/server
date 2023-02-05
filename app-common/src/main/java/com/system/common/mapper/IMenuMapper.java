@@ -1,6 +1,6 @@
 package com.system.common.mapper;
 
-import com.system.common.model.MenuModel;
+import com.system.common.domain.model.MenuModel;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

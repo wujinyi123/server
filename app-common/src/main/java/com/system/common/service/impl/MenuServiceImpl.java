@@ -7,9 +7,9 @@ import com.system.base.util.DaoUtil;
 import com.system.base.util.SnowflakeIdUtil;
 import com.system.common.mapper.IMenuMapper;
 import com.system.common.mapper.IRoleMenuMapper;
-import com.system.common.model.MenuModel;
-import com.system.common.model.RoleMenuModel;
-import com.system.common.pojo.menu.MenuTreeDTO;
+import com.system.common.domain.model.MenuModel;
+import com.system.common.domain.model.RoleMenuModel;
+import com.system.common.domain.dto.menu.MenuTreeDTO;
 import com.system.common.service.IMenuService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -42,7 +42,7 @@ public class MenuServiceImpl implements IMenuService {
     public Map<String, Object> currentMenu(HttpServletRequest request) {
         CurrentUser currentUser = userSession.getAttibute(request);
         //没有配置角色
-        String roleCodes = (String) currentUser.getUser().get("role");
+        String roleCodes = (String) currentUser.getUser().get("roleCode");
         if (StringUtils.isEmpty(roleCodes)) {
             return new HashMap<>();
         }

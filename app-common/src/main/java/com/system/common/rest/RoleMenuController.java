@@ -1,6 +1,6 @@
 package com.system.common.rest;
 
-import com.system.common.model.RoleMenuModel;
+import com.system.common.domain.model.RoleMenuModel;
 import com.system.common.service.IRoleMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

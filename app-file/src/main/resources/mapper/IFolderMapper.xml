@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.system.file.mapper.IFolderMapper">
-    <resultMap id="baseMap" type="com.system.file.model.FolderModel">
+    <resultMap id="baseMap" type="com.system.file.domain.model.FolderModel">
         <id column="id" property="id"/>
         <result column="folder_name" property="folderName"/>
         <result column="remark" property="remark"/>

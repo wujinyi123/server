@@ -1,10 +1,10 @@
 package com.system.file.rest;
 
 import com.github.pagehelper.PageInfo;
-import com.system.file.model.FileModel;
-import com.system.file.model.FolderModel;
-import com.system.file.pojo.ftp.FileQO;
-import com.system.file.pojo.ftp.FolderQO;
+import com.system.file.domain.model.FileModel;
+import com.system.file.domain.model.FolderModel;
+import com.system.file.domain.qo.file.FileQO;
+import com.system.file.domain.qo.folder.FolderQO;
 import com.system.file.service.IFtpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController

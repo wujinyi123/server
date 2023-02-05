@@ -1,8 +1,8 @@
 package com.system.common.service;
 
 import com.github.pagehelper.PageInfo;
-import com.system.common.pojo.log.LogQO;
-import com.system.common.model.LogModel;
+import com.system.common.domain.qo.log.LogQO;
+import com.system.common.domain.model.LogModel;
 
 import java.util.Map;
 

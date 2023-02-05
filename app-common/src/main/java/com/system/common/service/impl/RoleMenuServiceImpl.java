@@ -5,7 +5,7 @@ import com.system.base.util.DaoUtil;
 import com.system.base.util.SnowflakeIdUtil;
 import com.system.common.mapper.IRoleMapper;
 import com.system.common.mapper.IRoleMenuMapper;
-import com.system.common.model.RoleMenuModel;
+import com.system.common.domain.model.RoleMenuModel;
 import com.system.common.service.IRoleMenuService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;

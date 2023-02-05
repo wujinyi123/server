@@ -1,6 +1,6 @@
 package com.system.common.service;
 
-import com.system.common.model.RoleMenuModel;
+import com.system.common.domain.model.RoleMenuModel;
 
 import java.util.List;
 

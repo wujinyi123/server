@@ -1,4 +1,4 @@
-package com.system.common.pojo.log;
+package com.system.common.domain.qo.log;
 
 import com.system.base.domain.BasePageQueryParam;
 import lombok.Data;

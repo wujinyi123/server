@@ -1,14 +1,13 @@
 package com.system.file.mapper;
 
-import com.system.file.model.FileModel;
+import com.system.file.domain.model.FileModel;
+import com.system.file.domain.qo.file.FileQO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 public interface IFileMapper {
-    List<FileModel> listFile(@Param("folderName") String folderName,
-                             @Param("fileName") String fileName,
-                             @Param("realName") String realName);
+    List<FileModel> listFile(FileQO fileQO);
 
     int insertFile(FileModel fileModel);
 
