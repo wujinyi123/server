@@ -9,5 +9,9 @@ public interface IUserSession {
 
     CurrentUser getAttibute();
 
+    CurrentUser getAttibute(String username);
+
     Boolean removeAttibute();
+
+    Boolean removeAttibute(String username);
 }

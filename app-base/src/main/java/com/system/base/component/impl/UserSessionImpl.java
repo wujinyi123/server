@@ -27,9 +27,15 @@ public class UserSessionImpl implements IUserSession {
 
     @Override
     public CurrentUser setAttibute(Map<String, Object> user) {
+        String username = (String) user.get("username");
+        String oldToken = redisService.getValueByKey(username);
+        if (StringUtils.isNotEmpty(oldToken)) {
+            redisService.setBySECONDS(oldToken, null, 1L);
+        }
         String token = UUID.randomUUID().toString().toLowerCase().replace("-", "");
         CurrentUser currentUser = new CurrentUser(token, user);
         redisService.setByMINUTES(token, JSONObject.toJSONString(currentUser), 30L);
+        redisService.setByMINUTES(username, token, 30L);
         return currentUser;
     }
 
@@ -50,9 +56,43 @@ public class UserSessionImpl implements IUserSession {
     }
 
     @Override
+    public CurrentUser getAttibute(String username) {
+        String token = redisService.getValueByKey(username);
+        CurrentUser currentUser = null;
+        if (StringUtils.isNotEmpty(token)) {
+            String json = redisService.getValueByKey(token);
+            if (StringUtils.isNotEmpty(json)) {
+                try {
+                    currentUser = JSONObject.parseObject(json, CurrentUser.class);
+                } catch (Exception e) {
+                    log.error("json转化失败");
+                }
+            }
+        }
+        return currentUser;
+    }
+
+    @Override
     public Boolean removeAttibute() {
-        String token = getToken();
-        redisService.setBySECONDS(token, null, 1L);
+        CurrentUser currentUser = getAttibute();
+        String token = currentUser.getToken();
+        String username = (String) currentUser.getUser().get("username");
+        if (StringUtils.isNotEmpty(token)) {
+            redisService.setBySECONDS(token, null, 1L);
+        }
+        if (StringUtils.isNotEmpty(username)) {
+            redisService.setBySECONDS(username, null, 1L);
+        }
+        return true;
+    }
+
+    @Override
+    public Boolean removeAttibute(String username) {
+        String token = redisService.getValueByKey(username);
+        redisService.setBySECONDS(username, null, 1L);
+        if (StringUtils.isNotEmpty(token)) {
+            redisService.setBySECONDS(token, null, 1L);
+        }
         return true;
     }
 

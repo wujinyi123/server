@@ -160,6 +160,8 @@ public class UserServiceImpl implements IUserService {
                     }
                 }
                 dto.setRoleName(roleNameList.stream().collect(Collectors.joining(",")));
+                dto.setPassword(null);
+                dto.setIsAlive(Objects.nonNull(userSession.getAttibute(dto.getUsername())));
                 list.add(dto);
             }
             pageInfo.setList(list);
