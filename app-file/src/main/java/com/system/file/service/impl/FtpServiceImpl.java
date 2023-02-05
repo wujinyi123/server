@@ -7,6 +7,7 @@ import com.system.base.util.DaoUtil;
 import com.system.base.util.SnowflakeIdUtil;
 import com.system.base.util.SystemChooseUtil;
 import com.system.base.util.ValidatorUtil;
+import com.system.file.domain.dto.ftp.FileDTO;
 import com.system.file.mapper.IFileMapper;
 import com.system.file.mapper.IFolderMapper;
 import com.system.file.domain.model.FileModel;
@@ -16,20 +17,15 @@ import com.system.file.domain.qo.folder.FolderQO;
 import com.system.file.service.IFtpService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URLEncoder;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -152,7 +148,7 @@ public class FtpServiceImpl implements IFtpService {
     }
 
     @Override
-    public void download(HttpServletResponse response, Long id) {
+    public FileDTO download(Long id) {
         FileModel model = fileMapper.selectById(id);
         if (Objects.isNull(model)) {
             throw new BusinessException("文件id错误");
@@ -162,34 +158,10 @@ public class FtpServiceImpl implements IFtpService {
         if (!file.exists()) {
             throw new BusinessException("文件不存在");
         }
-        // 清空response
-        response.reset();
-        // 设置response的Header
-        try {
-            response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(model.getRealName(), "UTF-8"));
-        } catch (Exception e) {
-            log.error("文件下载失败：", e);
-            throw new BusinessException("文件下载失败");
-        }
-        response.setContentType("application/octet-stream");
-        response.setCharacterEncoding("utf-8");
-        byte[] buffer;
-        //InputStream -> byte[]
-        try (InputStream fis = new BufferedInputStream(new FileInputStream(file))) {
-            buffer = new byte[fis.available()];
-            fis.read(buffer);
-        } catch (Exception e) {
-            log.error("文件下载失败：", e);
-            throw new BusinessException("文件下载失败");
-        }
-        //byte[] -> OutputStream
-        try (OutputStream toClient = new BufferedOutputStream(response.getOutputStream())) {
-            toClient.write(buffer);
-            toClient.flush();
-        } catch (Exception e) {
-            log.error("文件下载失败：", e);
-            throw new BusinessException("文件下载失败");
-        }
+        FileDTO dto = new FileDTO();
+        BeanUtils.copyProperties(model, dto);
+        dto.setFile(file);
+        return dto;
     }
 
     @Override

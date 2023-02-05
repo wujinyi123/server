@@ -1,6 +1,8 @@
 package com.system.file.rest;
 
 import com.github.pagehelper.PageInfo;
+import com.system.base.exception.BusinessException;
+import com.system.file.domain.dto.ftp.FileDTO;
 import com.system.file.domain.model.FileModel;
 import com.system.file.domain.model.FolderModel;
 import com.system.file.domain.qo.file.FileQO;
@@ -18,6 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URLEncoder;
 
 @RestController
 public class FtpController {
@@ -59,7 +68,33 @@ public class FtpController {
     @GetMapping("/ftp/file/{id}")
     public void download(HttpServletResponse response,
                          @PathVariable Long id) {
-        ftpService.download(response, id);
+        FileDTO dto = ftpService.download(id);
+        File file = dto.getFile();
+        // 清空response
+        response.reset();
+        // 设置response的Header
+        try {
+            response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(dto.getRealName(), "UTF-8"));
+        } catch (Exception e) {
+            throw new BusinessException("文件下载失败");
+        }
+        response.setContentType("application/octet-stream");
+        response.setCharacterEncoding("utf-8");
+        byte[] buffer;
+        //InputStream -> byte[]
+        try (InputStream fis = new BufferedInputStream(new FileInputStream(file))) {
+            buffer = new byte[fis.available()];
+            fis.read(buffer);
+        } catch (Exception e) {
+            throw new BusinessException("文件下载失败");
+        }
+        //byte[] -> OutputStream
+        try (OutputStream toClient = new BufferedOutputStream(response.getOutputStream())) {
+            toClient.write(buffer);
+            toClient.flush();
+        } catch (Exception e) {
+            throw new BusinessException("文件下载失败");
+        }
     }
 
     @DeleteMapping("/ftp/file/{id}")

@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -22,10 +21,12 @@ public class UserSessionImpl implements IUserSession {
     private static final String TOKEN = "token";
 
     @Autowired
+    private HttpServletRequest request;
+    @Autowired
     private IRedisService redisService;
 
     @Override
-    public CurrentUser setAttibute(HttpServletRequest request, Map<String, Object> user) {
+    public CurrentUser setAttibute(Map<String, Object> user) {
         String token = UUID.randomUUID().toString().toLowerCase().replace("-", "");
         CurrentUser currentUser = new CurrentUser(token, user);
         redisService.setByMINUTES(token, JSONObject.toJSONString(currentUser), 30L);
@@ -33,8 +34,8 @@ public class UserSessionImpl implements IUserSession {
     }
 
     @Override
-    public CurrentUser getAttibute(HttpServletRequest request) {
-        String token = getToken(request);
+    public CurrentUser getAttibute() {
+        String token = getToken();
         String json = redisService.getValueByKey(token);
         CurrentUser currentUser = null;
         try {
@@ -49,13 +50,13 @@ public class UserSessionImpl implements IUserSession {
     }
 
     @Override
-    public Boolean removeAttibute(HttpServletRequest request) {
-        String token = getToken(request);
+    public Boolean removeAttibute() {
+        String token = getToken();
         redisService.setBySECONDS(token, null, 1L);
         return true;
     }
 
-    private String getToken(HttpServletRequest request) {
+    private String getToken() {
         String token = request.getHeader(TOKEN);
         if (StringUtils.isEmpty(token)) {
             throw new NoLoginRuntimeException("请求头token不能空");

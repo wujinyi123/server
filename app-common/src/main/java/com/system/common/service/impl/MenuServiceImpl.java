@@ -18,7 +18,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,8 +38,8 @@ public class MenuServiceImpl implements IMenuService {
     private IUserSession userSession;
 
     @Override
-    public Map<String, Object> currentMenu(HttpServletRequest request) {
-        CurrentUser currentUser = userSession.getAttibute(request);
+    public Map<String, Object> currentMenu() {
+        CurrentUser currentUser = userSession.getAttibute();
         //没有配置角色
         String roleCodes = (String) currentUser.getUser().get("roleCode");
         if (StringUtils.isEmpty(roleCodes)) {

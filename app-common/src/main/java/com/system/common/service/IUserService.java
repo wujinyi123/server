@@ -7,14 +7,12 @@ import com.system.common.domain.model.UserModel;
 import com.system.common.domain.qo.user.LoginQO;
 import com.system.common.domain.qo.user.UserQO;
 
-import javax.servlet.http.HttpServletRequest;
-
 public interface IUserService {
-    CurrentUser login(HttpServletRequest request, LoginQO loginQO);
+    CurrentUser login(LoginQO loginQO);
 
-    CurrentUser getCurrentUser(HttpServletRequest request);
+    CurrentUser getCurrentUser();
 
-    Boolean logout(HttpServletRequest request);
+    Boolean logout();
 
     Boolean updatePassword(UpdatePasswordDTO dto);
 

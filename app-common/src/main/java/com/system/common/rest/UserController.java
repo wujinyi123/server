@@ -16,27 +16,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-
 @RestController
 public class UserController {
     @Autowired
     private IUserService userService;
 
     @PostMapping("/user/login")
-    public CurrentUser login(HttpServletRequest request,
-                             @RequestBody LoginQO loginQO) {
-        return userService.login(request, loginQO);
+    public CurrentUser login(@RequestBody LoginQO loginQO) {
+        return userService.login(loginQO);
     }
 
     @GetMapping("/user/current")
-    public CurrentUser getCurrentUser(HttpServletRequest request) {
-        return userService.getCurrentUser(request);
+    public CurrentUser getCurrentUser() {
+        return userService.getCurrentUser();
     }
 
     @GetMapping("/user/logout")
-    public Boolean logout(HttpServletRequest request) {
-        return userService.logout(request);
+    public Boolean logout() {
+        return userService.logout();
     }
 
     @PostMapping("/user/updatePassword")

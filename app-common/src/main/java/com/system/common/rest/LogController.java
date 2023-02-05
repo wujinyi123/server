@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @RestController
@@ -20,7 +19,7 @@ public class LogController {
     private ILogService logService;
 
     @GetMapping("/common/log")
-    public PageInfo<LogModel> pageLog(HttpServletRequest request, LogQO logQO) {
+    public PageInfo<LogModel> pageLog(LogQO logQO) {
         return logService.pageLog(logQO);
     }
 

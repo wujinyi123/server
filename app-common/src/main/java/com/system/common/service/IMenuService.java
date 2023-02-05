@@ -2,11 +2,10 @@ package com.system.common.service;
 
 import com.system.common.domain.model.MenuModel;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 public interface IMenuService {
-    Map<String, Object> currentMenu(HttpServletRequest request);
+    Map<String, Object> currentMenu();
 
     Map<String, Object> allMenu();
 

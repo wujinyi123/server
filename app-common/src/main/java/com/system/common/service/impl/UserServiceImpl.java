@@ -27,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -52,7 +51,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public CurrentUser login(HttpServletRequest request, LoginQO loginQO) {
+    public CurrentUser login(LoginQO loginQO) {
         if (StringUtils.isAnyEmpty(loginQO.getUsername(), loginQO.getPassword())) {
             throw new BusinessException("账号密码不能为空");
         }
@@ -71,7 +70,7 @@ public class UserServiceImpl implements IUserService {
         }
         String json = JSONObject.toJSONString(model);
         Map<String, Object> user = JSONObject.parseObject(json, Map.class);
-        CurrentUser currentUser = userSession.setAttibute(request, user);
+        CurrentUser currentUser = userSession.setAttibute(user);
         LogModel logModel = new LogModel();
         logModel.setId(SnowflakeIdUtil.getSnowflakeId());
         logModel.setUsername(model.getUsername());
@@ -85,13 +84,13 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public CurrentUser getCurrentUser(HttpServletRequest request) {
-        return userSession.getAttibute(request);
+    public CurrentUser getCurrentUser() {
+        return userSession.getAttibute();
     }
 
     @Override
-    public Boolean logout(HttpServletRequest request) {
-        return userSession.removeAttibute(request);
+    public Boolean logout() {
+        return userSession.removeAttibute();
     }
 
     @Override
