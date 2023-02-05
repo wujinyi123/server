@@ -53,7 +53,7 @@
 
     <insert id="addUser">
         insert into t_common_user(<include refid="baseColumns"/>)
-        values (#{id},#{username},#{password},#{name},#{sex},#{tel},#{email},#{roleCode},#{img},sysdate(),null,null)
+        values (#{id},#{username},#{password},#{name},#{sex},#{tel},#{email},#{roleCode},#{img},sysdate(),null,#{updateInfo})
     </insert>
 
     <update id="updateUser">

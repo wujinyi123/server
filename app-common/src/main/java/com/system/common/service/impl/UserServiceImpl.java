@@ -175,6 +175,9 @@ public class UserServiceImpl implements IUserService {
         if (Objects.nonNull(userMapper.getUser(model.getUsername()))) {
             throw new BusinessException("账号已存在");
         }
+        CurrentUser currentUser = userSession.getAttibute();
+        String updateInfo = String.format(UPDATE_FORMAT, currentUser.getUser().getOrDefault("username", ""), "添加信息");
+        model.setUpdateInfo(updateInfo);
         model.setId(SnowflakeIdUtil.getSnowflakeId());
         if (DaoUtil.isInsertFail(userMapper.addUser(model))) {
             throw new BusinessException("添加失败");
@@ -190,6 +193,9 @@ public class UserServiceImpl implements IUserService {
         if (Objects.isNull(userMapper.getUser(model.getUsername()))) {
             throw new BusinessException("账号不存在");
         }
+        CurrentUser currentUser = userSession.getAttibute();
+        String updateInfo = String.format(UPDATE_FORMAT, currentUser.getUser().getOrDefault("username", ""), "修改信息");
+        model.setUpdateInfo(updateInfo);
         if (DaoUtil.isInsertFail(userMapper.updateUser(model))) {
             throw new BusinessException("修改失败");
         }
