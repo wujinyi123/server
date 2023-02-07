@@ -12,6 +12,7 @@ import com.system.common.service.ILogService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 
@@ -29,6 +30,7 @@ public class LogServiceImpl implements ILogService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean insertLog(LogModel model) {
         model.setId(SnowflakeIdUtil.getSnowflakeId());
         if (DaoUtil.isInsertFail(logMapper.insertLog(model))) {
@@ -37,8 +39,4 @@ public class LogServiceImpl implements ILogService {
         return true;
     }
 
-    @Override
-    public Map<String, Object> logStat(String username) {
-        return null;
-    }
 }

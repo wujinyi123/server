@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,6 +72,7 @@ public class MenuServiceImpl implements IMenuService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean insertMenu(MenuModel model) {
         if (Objects.nonNull(menuMapper.getByCode(model.getCode()))) {
             throw new BusinessException("菜单代码已存在");
@@ -83,6 +85,7 @@ public class MenuServiceImpl implements IMenuService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean updateMenu(MenuModel model) {
         if (DaoUtil.isUpdateFail(menuMapper.updateMenu(model))) {
             throw new BusinessException("修改失败");
@@ -91,6 +94,7 @@ public class MenuServiceImpl implements IMenuService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean deleteMenu(String code) {
         List<MenuModel> list = menuMapper.listMenu();
         List<MenuTreeDTO> allNodes = createMenuTree(list);

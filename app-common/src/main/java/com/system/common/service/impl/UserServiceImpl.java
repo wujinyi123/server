@@ -170,6 +170,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean addUser(UserModel model) {
         if (StringUtils.isAnyEmpty(model.getUsername(), model.getName(), model.getSex())) {
             throw new BusinessException("必填项不能为空");
@@ -188,6 +189,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean updateUser(UserModel model) {
         if (StringUtils.isAnyEmpty(model.getUsername(), model.getName(), model.getSex())) {
             throw new BusinessException("必填项不能为空");
@@ -205,6 +207,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean deleteUser(String username) {
         if (DaoUtil.isInsertFail(userMapper.deleteUser(username))) {
             throw new BusinessException("删除失败");

@@ -8,6 +8,7 @@ import com.system.common.domain.model.RoleModel;
 import com.system.common.service.IRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -23,6 +24,7 @@ public class RoleServiceImpl implements IRoleService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean insertRole(RoleModel model) {
         if (Objects.nonNull(roleMapper.getByCode(model.getCode()))) {
             throw new BusinessException("角色代码已存在");
@@ -35,6 +37,7 @@ public class RoleServiceImpl implements IRoleService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean updateRole(RoleModel model) {
         if (DaoUtil.isUpdateFail(roleMapper.updateRole(model))) {
             throw new BusinessException("修改失败");
@@ -43,6 +46,7 @@ public class RoleServiceImpl implements IRoleService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean deleteRole(String code) {
         if (DaoUtil.isDeleteFail(roleMapper.deleteRole(code))) {
             throw new BusinessException("删除失败");

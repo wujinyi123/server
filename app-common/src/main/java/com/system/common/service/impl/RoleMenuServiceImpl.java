@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ public class RoleMenuServiceImpl implements IRoleMenuService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean saveRoleMenu(String roleCode, List<String> menuCodes) {
         if (Objects.isNull(roleMapper.getByCode(roleCode))) {
             throw new BusinessException("角色不存在");
