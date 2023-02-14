@@ -4,6 +4,7 @@ import com.system.file.domain.dto.template.ExportDTO;
 import com.system.file.domain.dto.template.TemplateDTO;
 import com.system.file.domain.model.TemplateTaskModel;
 import com.system.file.service.ITemplateService;
+import com.system.file.util.DownloadFileUtil;
 import com.system.file.util.TemplateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -25,15 +28,17 @@ public class TemplateController {
     @Autowired
     private ITemplateService templateService;
 
-    @GetMapping("/template")
-    public TemplateDTO queryById(@RequestParam String id) {
-        return TemplateUtil.getExportTemplate(id);
-    }
-
     @PostMapping("/template/export")
     public TemplateTaskModel export(HttpServletRequest request,
                                     @RequestBody ExportDTO dto) {
         return templateService.export(getHttpHeaders(request), dto);
+    }
+
+    @GetMapping("/template/export")
+    public void export(HttpServletResponse response,
+                       @RequestParam String fileName) {
+        File file = templateService.export(fileName);
+        DownloadFileUtil.dowmload(response, file, fileName);
     }
 
     private HttpHeaders getHttpHeaders(HttpServletRequest request) {

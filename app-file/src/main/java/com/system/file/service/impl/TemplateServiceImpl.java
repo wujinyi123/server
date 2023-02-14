@@ -166,6 +166,16 @@ public class TemplateServiceImpl implements ITemplateService {
         return templateTaskModel;
     }
 
+    @Override
+    public File export(String fileName) {
+        String exportRoot = SystemChooseUtil.choose(exportForWin, exportForLinux);
+        File file = new File(exportRoot + "/" + fileName);
+        if (!file.exists()) {
+            throw new BusinessException("文件不存在");
+        }
+        return file;
+    }
+
     private String getParams(Map<String, Object> map) {
         List<String> list = new ArrayList<>();
         for (Map.Entry<String, Object> entry : map.entrySet()) {

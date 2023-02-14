@@ -8,6 +8,7 @@ import com.system.file.domain.model.FolderModel;
 import com.system.file.domain.qo.file.FileQO;
 import com.system.file.domain.qo.folder.FolderQO;
 import com.system.file.service.IFtpService;
+import com.system.file.util.DownloadFileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -70,31 +71,7 @@ public class FtpController {
                          @PathVariable Long id) {
         FileDTO dto = ftpService.download(id);
         File file = dto.getFile();
-        // 清空response
-        response.reset();
-        // 设置response的Header
-        try {
-            response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(dto.getRealName(), "UTF-8"));
-        } catch (Exception e) {
-            throw new BusinessException("文件下载失败");
-        }
-        response.setContentType("application/octet-stream");
-        response.setCharacterEncoding("utf-8");
-        byte[] buffer;
-        //InputStream -> byte[]
-        try (InputStream fis = new BufferedInputStream(new FileInputStream(file))) {
-            buffer = new byte[fis.available()];
-            fis.read(buffer);
-        } catch (Exception e) {
-            throw new BusinessException("文件下载失败");
-        }
-        //byte[] -> OutputStream
-        try (OutputStream toClient = new BufferedOutputStream(response.getOutputStream())) {
-            toClient.write(buffer);
-            toClient.flush();
-        } catch (Exception e) {
-            throw new BusinessException("文件下载失败");
-        }
+        DownloadFileUtil.dowmload(response, file, dto.getRealName());
     }
 
     @DeleteMapping("/ftp/file/{id}")
