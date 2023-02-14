@@ -37,10 +37,10 @@ public class FtpServiceImpl implements IFtpService {
     private static long MAXSIZE = new Integer(10 * 1024 * 1024).longValue();
     private static DateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 
-    @Value("${file.root.win:G:/fileSystem}")
-    private String rootForWin;
-    @Value("${file.root.linux:/data/fileSystem}")
-    private String rootForLinux;
+    @Value("${file.ftp.win}")
+    private String ftpForWin;
+    @Value("${file.ftp.linux}")
+    private String ftpForLinux;
 
     @Autowired
     private IFolderMapper folderMapper;
@@ -110,7 +110,7 @@ public class FtpServiceImpl implements IFtpService {
         if (Objects.isNull(folderMapper.selectByFolderName(folderName))) {
             throw new BusinessException("文件夹不存在");
         }
-        String root = SystemChooseUtil.choose(rootForWin, rootForLinux);
+        String ftpRoot = SystemChooseUtil.choose(ftpForWin, ftpForLinux);
         String realName = file.getOriginalFilename();
         String[] arr = realName.split("\\.");
         String fileType = arr[arr.length - 1];
@@ -121,12 +121,12 @@ public class FtpServiceImpl implements IFtpService {
         model.setFileSize(file.getSize());
         model.setUsername(username);
         //所在文件夹
-        File folderFile = new File(root + "/" + folderName);
+        File folderFile = new File(ftpRoot + "/" + folderName);
         if (!folderFile.exists()) {
             folderFile.mkdirs();
         }
         //上传的文件
-        File uploadFile = new File(root + "/" + folderName + "/" + model.getFileName());
+        File uploadFile = new File(ftpRoot + "/" + folderName + "/" + model.getFileName());
         if (uploadFile.exists()) {
             uploadFile.delete();
         }
@@ -153,8 +153,8 @@ public class FtpServiceImpl implements IFtpService {
         if (Objects.isNull(model)) {
             throw new BusinessException("文件id错误");
         }
-        String root = SystemChooseUtil.choose(rootForWin, rootForLinux);
-        File file = new File(root + "/" + model.getFolderName() + "/" + model.getFileName());
+        String ftpRoot = SystemChooseUtil.choose(ftpForWin, ftpForLinux);
+        File file = new File(ftpRoot + "/" + model.getFolderName() + "/" + model.getFileName());
         if (!file.exists()) {
             throw new BusinessException("文件不存在");
         }
@@ -171,8 +171,8 @@ public class FtpServiceImpl implements IFtpService {
         if (Objects.isNull(model)) {
             throw new BusinessException("文件id错误");
         }
-        String root = SystemChooseUtil.choose(rootForWin, rootForLinux);
-        File file = new File(root + "/" + model.getFolderName() + "/" + model.getFileName());
+        String ftpRoot = SystemChooseUtil.choose(ftpForWin, ftpForLinux);
+        File file = new File(ftpRoot + "/" + model.getFolderName() + "/" + model.getFileName());
         if (file.exists()) {
             file.delete();
         }

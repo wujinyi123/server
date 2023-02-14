@@ -1,0 +1,9 @@
+<configuration>
+    <!--
+        id：唯一性标志
+        path：模板文件路径
+        server-name：所属服务
+        request-url：请求url
+    -->
+    <template id="EXPORT_USER" path="export/user.xlsx" server-name="app-common" request-url="/user/info"/>
+</configuration>

@@ -1,0 +1,19 @@
+<configuration>
+    <!--
+        id：唯一性标志
+        path：模板文件路径
+        data-row：数据开始行，从0起，默认值为1
+        server-name：所属服务
+        request-url：请求url
+          field：字段名
+    -->
+    <template id="IMPORT_USER" path="import/user.xlsx" data-row="1"
+              server-name="app-common" request-url="/user/info">
+        <title field="username">账号</title>
+        <title field="name">姓名</title>
+        <title field="sex">性别</title>
+        <title field="tel">手机号</title>
+        <title field="email">邮箱</title>
+        <title field="roleName">角色</title>
+    </template>
+</configuration>

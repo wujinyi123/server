@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.system.file.mapper.ITemplateTaskMapper">
+    <resultMap id="baseMap" type="com.system.file.domain.model.TemplateTaskModel">
+        <id column="id" property="id"/>
+        <result column="code" property="code"/>
+        <result column="type" property="type"/>
+        <result column="status" property="status"/>
+        <result column="task_result" property="taskResult"/>
+        <result column="result" property="result"/>
+        <result column="error" property="error"/>
+        <result column="opera_user" property="operaUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    <sql id="baseColumns">
+        id,code,type,status,task_result,result,error,opera_user,create_time,update_time
+    </sql>
+
+    <insert id="addTask">
+        insert into t_file_template_task(<include refid="baseColumns"/>)
+        values (#{id}, #{code}, #{type}, #{status}, #{taskResult}, #{result}, #{error}, #{operaUser}, sysdate(), null)
+    </insert>
+
+    <update id="updateTask">
+        update t_file_template_task
+        set status=#{status}, task_result=#{taskResult}, result=#{result}, error=#{error}, update_time=sysdate()
+        where code=#{code}
+    </update>
+</mapper>

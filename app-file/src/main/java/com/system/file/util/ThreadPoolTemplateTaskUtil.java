@@ -1,4 +1,4 @@
-package com.system.base.util;
+package com.system.file.util;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
@@ -6,7 +6,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-public class ThreadPoolUtil {
+public class ThreadPoolTemplateTaskUtil {
     private int corePoolSize = 5;
     private int maximumPoolSize = 10;
     private long keepAliveTime = 1;
@@ -17,10 +17,10 @@ public class ThreadPoolUtil {
             new ThreadFactoryBuilder().setNameFormat("ThreadPool-%d").build());
 
     private static class Holder {
-        private static final ThreadPoolUtil INSTANCE = new ThreadPoolUtil();
+        private static final ThreadPoolTemplateTaskUtil INSTANCE = new ThreadPoolTemplateTaskUtil();
     }
 
-    public static ThreadPoolUtil getInstance() {
+    public static ThreadPoolTemplateTaskUtil getInstance() {
         return Holder.INSTANCE;
     }
 

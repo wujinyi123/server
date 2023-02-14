@@ -42,7 +42,7 @@ public class UserController {
     }
 
     @GetMapping("/user/info")
-    public PageInfo<UserModel> pageUser(UserQO qo) {
+    public PageInfo<UserModel> pageUser(UserQO qo) throws InterruptedException {
         return userService.pageUser(qo);
     }
 
